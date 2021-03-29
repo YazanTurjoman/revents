@@ -9,6 +9,9 @@ import SimpleMap from './TestMap';
 const Sandbox = () => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.test.data);
+  const { loading } = useSelector((state) => state.async);
+  const [target, setTarget] = useState(null);
+
   const defaultProps = {
     center: {
       lat: 59.95,
@@ -29,14 +32,24 @@ const Sandbox = () => {
       <h1>Testing 123</h1>
       <h3>the data is: {data}</h3>
       <Button
-        onClick={() => dispatch(increment(100))}
+        loading={loading && target === 'INCREMENT_COUNTER'}
+        onClick={(e) => {
+          dispatch(increment(100));
+          setTarget(e.target.name);
+        }}
         color='green'
         content='INCREMENT_COUNTER'
+        name='INCREMENT_COUNTER'
       />
       <Button
-        onClick={() => dispatch(decrement(100))}
+        loading={loading && target === 'DECREMENT_COUNTER'}
+        onClick={(e) => {
+          dispatch(decrement(100));
+          setTarget(e.target.name);
+        }}
         color='red'
         content='DECREMENT_COUNTER'
+        name='DECREMENT_COUNTER'
       />
       <Button
         onClick={() =>
