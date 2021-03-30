@@ -45,7 +45,7 @@ const EventDetailedInfo = ({ event }) => {
           </Grid.Column>
         </Grid>
       </Segment>
-      {mapOpen && <EventDetailedMap latlng={event.venue.latlng} />}
+      {mapOpen && <EventDetailedMap latlng={event.venue.latLng} />}
     </Segment.Group>
   );
 };
