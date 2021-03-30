@@ -61,11 +61,29 @@ export function cancelEventToFirestore(event) {
 export function setUserProfileData(user) {
   return db
     .collection('users')
-    .doc(user.id)
+    .doc(user.uid)
     .set({
       displayName: user.displayName,
       email: user.email,
       photoURL: user.photoURL || null,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
+}
+
+export function getUserProfile(userId) {
+  return db.collection('users').doc(userId);
+}
+
+export async function updateUserProfile(profile) {
+  const user = firebase.auth().currentUser;
+  try {
+    if (user.dispalyName !== profile.dispalyName) {
+      await user.updateProfile({
+        displayName: profile.displayName,
+      });
+    }
+    return await db.collection('users').doc(user.uid).update(profile);
+  } catch (error) {
+    throw error;
+  }
 }
