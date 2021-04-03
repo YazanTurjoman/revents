@@ -7,23 +7,21 @@ import EventDetailedChat from './EventDetailedChat';
 import { useDispatch, useSelector } from 'react-redux';
 import useFirestoreDoc from '../../../app/hooks/useFirestoreDoc';
 import { listenToEventFromFirestore } from '../../../app/firestore/firestoreService';
-import { listenToEvents } from '../eventActions';
+import { listenToSelectedEvents } from '../eventActions';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { Redirect } from 'react-router';
 
 const EventDetailedPage = ({ match }) => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.auth);
-  const event = useSelector((state) =>
-    state.event.events.find((e) => e.id === match.params.id)
-  );
-  const isHost = event?.hostUid === currentUser.uid;
-  const isGoing = event?.attendees?.some((a) => a.id === currentUser.uid);
+  const event = useSelector((state) => state.event.selectedEvent);
+  const isHost = event?.hostUid === currentUser?.uid;
+  const isGoing = event?.attendees?.some((a) => a.id === currentUser?.uid);
   const { loading, error } = useSelector((state) => state.async);
 
   useFirestoreDoc({
     query: () => listenToEventFromFirestore(match.params.id),
-    data: (event) => dispatch(listenToEvents([event])),
+    data: (event) => dispatch(listenToSelectedEvents(event)),
     deps: [match.params.id, dispatch],
   });
 
